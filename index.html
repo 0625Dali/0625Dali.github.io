@@ -146,6 +146,98 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-news-search-1" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/05/25/news-search-1/">新闻检索系统（一）</a>
+    </h1>
+  
+
+        
+        <a href="/2020/05/25/news-search-1/" class="archive-article-date">
+  	<time datetime="2020-05-25T07:34:24.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-05-25</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本项目是指导大家从零开始开始构建一个针对于新浪新闻的简单的搜索引擎，使用了python与mysql的相关基础知识，涉及数据采集、数据存储、数据预处理、前端开发和后台数据索引与优化。项目架构相对简单，首先我们明确一下我们的目标和所需要做的工作:</p>
+<ul>
+<li><strong>数据采集</strong></li>
+<li><strong>数据预处理</strong></li>
+<li><strong>生成索引</strong></li>
+<li><strong>BM25文本相似度算法</strong></li>
+<li><strong>搜索页面与结果展示</strong></li>
+</ul>
+<hr>
+<h2 id=""><a href="#" class="headerlink" title=""></a><img src="/img/%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F.jpg" alt="生命周期"></h2><h2 id="1-数据采集"><a href="#1-数据采集" class="headerlink" title="1.数据采集"></a>1.数据采集</h2><p>打造一个搜索引擎有一个很重要的基础，就是我们需要有满足搜索引擎的数据。我们的目标是打造一个新闻类的搜索引擎，所以我们需要得到新闻的数据，这里我采集的是<a href="https://www.sina.com.cn/" target="_blank" rel="noopener">新浪</a>的新闻数据。</p>
+<p>采集数据的工具我选用了python的Scrapy爬虫框架，从新浪新闻的主页可以看到新浪新闻以及帮我们做好了很多新闻类别的分类。任意点开多个新闻，我们以娱乐类为例子 <code>https://ent.sina.com.cn/s/m/2020-05-18/doc-iircuyvi3711061.shtml</code> ，可以发现url由<code>https://类别.sina.com/**/**/**/日期(2020-05-18)/***.shtml</code>组成。到这里我们已经确定了url的链接规律，在Scrapy中编写正则表达式爬取类似的网站：(正则表达式仅供参考)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:&#x2F;&#x2F;[a-z]*[.](news.|)sina[.]com.cn.*?\d\d\d\d-\d\d-\d\d.*</span><br></pre></td></tr></table></figure>
+
+<p>我们爬取的目标内容为 <strong><em>文章类别、标题、url、时间、正文</em></strong></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">label &#x3D; scrapy.Field()</span><br><span class="line">title &#x3D; scrapy.Field()</span><br><span class="line">url &#x3D; scrapy.Field()</span><br><span class="line">time &#x3D; scrapy.Field()</span><br><span class="line">article_content &#x3D; scrapy.Field()</span><br></pre></td></tr></table></figure>
+
+<p>最后将采集完的数据保存到本地文件中，这里我选择写入csv文件，你也可以直接导入数据库当中；(写入csv后，我可以使用Navicat手动直接导入mysql中😁)</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&quot;label&quot;: &quot;news&quot;, &quot;title&quot;: &quot;习近平在世卫大会视频会议开幕式上致辞&quot;, &quot;url&quot;: &quot;https:&#x2F;&#x2F;news.sina.com.cn&#x2F;c&#x2F;xl&#x2F;2020-05-18&#x2F;doc-iirczymk2292987.shtml&quot;, &quot;time&quot;: &quot;2020年05月18日 19:03&quot;, &quot;article_content&quot;: &quot;原标题：独家视频丨习近平在第73届世界卫生大会视频会议开幕式上致辞....&quot;&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>使用Scrapy时的建议：</strong><br>    关闭ROBOTSTXT_OBEY = False<br>    设置请求头 user-agent</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/05/25/news-search-1/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-firstblog" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -344,6 +436,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">JAVA</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">python</a>
               </li>
             
             <div class="clearfix"></div>
