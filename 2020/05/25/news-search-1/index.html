@@ -8,20 +8,18 @@
   <link rel="dns-prefetch" href="https://0625Dali.github.io">
   <title>新闻检索系统（一） | 个人博客</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="前言本项目是指导大家从零开始开始构建一个针对于新浪新闻的简单的搜索引擎，使用了python与mysql的相关基础知识，涉及数据采集、数据存储、数据预处理、前端开发和后台数据索引与优化。项目架构相对简单，首先我们明确一下我们的目标和所需要做的工作:  数据采集 数据预处理 生成索引 BM25文本相似度算法 搜索页面与结果展示   1.数据采集打造一个搜索引擎有一个很重要的基础，就是我们需要有满足搜索">
+  <meta name="description" content="前言本项目是指导大家从零开始开始构建一个针对于新浪新闻的简单的搜索引擎，使用了python与mysql的相关基础知识，涉及数据采集、数据存储、数据预处理、前端开发和后台数据索引与优化。项目架构相对简单，首先我们明确一下我们的目标和所需要做的工作:  数据采集 数据预处理 生成索引 BM25文本相似度算法 搜索页面与结果展示  1.数据采集打造一个搜索引擎有一个很重要的基础，就是我们需要有满足搜索引">
 <meta property="og:type" content="article">
 <meta property="og:title" content="新闻检索系统（一）">
 <meta property="og:url" content="https://0625dali.github.io/2020/05/25/news-search-1/index.html">
 <meta property="og:site_name" content="个人博客">
-<meta property="og:description" content="前言本项目是指导大家从零开始开始构建一个针对于新浪新闻的简单的搜索引擎，使用了python与mysql的相关基础知识，涉及数据采集、数据存储、数据预处理、前端开发和后台数据索引与优化。项目架构相对简单，首先我们明确一下我们的目标和所需要做的工作:  数据采集 数据预处理 生成索引 BM25文本相似度算法 搜索页面与结果展示   1.数据采集打造一个搜索引擎有一个很重要的基础，就是我们需要有满足搜索">
+<meta property="og:description" content="前言本项目是指导大家从零开始开始构建一个针对于新浪新闻的简单的搜索引擎，使用了python与mysql的相关基础知识，涉及数据采集、数据存储、数据预处理、前端开发和后台数据索引与优化。项目架构相对简单，首先我们明确一下我们的目标和所需要做的工作:  数据采集 数据预处理 生成索引 BM25文本相似度算法 搜索页面与结果展示  1.数据采集打造一个搜索引擎有一个很重要的基础，就是我们需要有满足搜索引">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://0625dali.github.io/img/CSDN.jpg">
 <meta property="article:published_time" content="2020-05-25T07:34:24.000Z">
-<meta property="article:modified_time" content="2020-05-25T09:04:53.919Z">
+<meta property="article:modified_time" content="2020-05-25T09:10:37.563Z">
 <meta property="article:author" content="Dali">
 <meta property="article:tag" content="python">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://0625dali.github.io/img/CSDN.jpg">
   
     <link rel="alternative" href="/atom.xml" title="个人博客" type="application/atom+xml">
   
@@ -179,8 +177,7 @@
 <li><strong>BM25文本相似度算法</strong></li>
 <li><strong>搜索页面与结果展示</strong></li>
 </ul>
-<hr>
-<h2 id=""><a href="#" class="headerlink" title=""></a><img src="/img/CSDN.jpg" alt="生命周期"></h2><h2 id="1-数据采集"><a href="#1-数据采集" class="headerlink" title="1.数据采集"></a>1.数据采集</h2><p>打造一个搜索引擎有一个很重要的基础，就是我们需要有满足搜索引擎的数据。我们的目标是打造一个新闻类的搜索引擎，所以我们需要得到新闻的数据，这里我采集的是<a href="https://www.sina.com.cn/" target="_blank" rel="noopener">新浪</a>的新闻数据。</p>
+<h2 id="1-数据采集"><a href="#1-数据采集" class="headerlink" title="1.数据采集"></a>1.数据采集</h2><p>打造一个搜索引擎有一个很重要的基础，就是我们需要有满足搜索引擎的数据。我们的目标是打造一个新闻类的搜索引擎，所以我们需要得到新闻的数据，这里我采集的是<a href="https://www.sina.com.cn/" target="_blank" rel="noopener">新浪</a>的新闻数据。</p>
 <p>采集数据的工具我选用了python的Scrapy爬虫框架，从新浪新闻的主页可以看到新浪新闻以及帮我们做好了很多新闻类别的分类。任意点开多个新闻，我们以娱乐类为例子 <code>https://ent.sina.com.cn/s/m/2020-05-18/doc-iircuyvi3711061.shtml</code> ，可以发现url由<code>https://类别.sina.com/**/**/**/日期(2020-05-18)/***.shtml</code>组成。到这里我们已经确定了url的链接规律，在Scrapy中编写正则表达式爬取类似的网站：(正则表达式仅供参考)</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:&#x2F;&#x2F;[a-z]*[.](news.|)sina[.]com.cn.*?\d\d\d\d-\d\d-\d\d.*</span><br></pre></td></tr></table></figure>
 
