@@ -175,7 +175,7 @@
 <li><strong>搜索页面与结果展示</strong></li>
 </ul>
 <hr>
-<h2 id=""><a href="#" class="headerlink" title=""></a><img src="/img/%E7%94%9F%E5%91%BD%E5%91%A8%E6%9C%9F.jpg" alt="生命周期"></h2><h2 id="1-数据采集"><a href="#1-数据采集" class="headerlink" title="1.数据采集"></a>1.数据采集</h2><p>打造一个搜索引擎有一个很重要的基础，就是我们需要有满足搜索引擎的数据。我们的目标是打造一个新闻类的搜索引擎，所以我们需要得到新闻的数据，这里我采集的是<a href="https://www.sina.com.cn/" target="_blank" rel="noopener">新浪</a>的新闻数据。</p>
+<h2 id=""><a href="#" class="headerlink" title=""></a><img src="/img/CSDN.jpg" alt="生命周期"></h2><h2 id="1-数据采集"><a href="#1-数据采集" class="headerlink" title="1.数据采集"></a>1.数据采集</h2><p>打造一个搜索引擎有一个很重要的基础，就是我们需要有满足搜索引擎的数据。我们的目标是打造一个新闻类的搜索引擎，所以我们需要得到新闻的数据，这里我采集的是<a href="https://www.sina.com.cn/" target="_blank" rel="noopener">新浪</a>的新闻数据。</p>
 <p>采集数据的工具我选用了python的Scrapy爬虫框架，从新浪新闻的主页可以看到新浪新闻以及帮我们做好了很多新闻类别的分类。任意点开多个新闻，我们以娱乐类为例子 <code>https://ent.sina.com.cn/s/m/2020-05-18/doc-iircuyvi3711061.shtml</code> ，可以发现url由<code>https://类别.sina.com/**/**/**/日期(2020-05-18)/***.shtml</code>组成。到这里我们已经确定了url的链接规律，在Scrapy中编写正则表达式爬取类似的网站：(正则表达式仅供参考)</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">https:&#x2F;&#x2F;[a-z]*[.](news.|)sina[.]com.cn.*?\d\d\d\d-\d\d-\d\d.*</span><br></pre></td></tr></table></figure>
 
